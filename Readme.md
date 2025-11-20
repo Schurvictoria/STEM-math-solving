@@ -6,7 +6,9 @@
 
 Проект предназначен для анализа геометрических и физических задач, представленных в виде изображения и текстового вопроса. Система определяет правильность утверждений на основе анализа визуальной информации и текста.
 
-[https://assets.contest.yandex.net/testsys/statement-file?hash=eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..wdLYaMKloKvx-9dv.8FM-Htd0FkJvsEwGR0h5PDhDrNmO-KTjaflmWZSO0xHiuvGMH9mqGdrAxR11FvoKEbzPxkW5M_Hcvc1kbaj6NEB1Hu0G-YBi.vKjPNBrUMkBWcAMxmvcd0w<img width="1024" height="1365" alt="image" src="https://github.com/user-attachments/assets/4308fe25-13a8-4ec0-aeb8-652d41b79bc6" />](https://assets.contest.yandex.net/testsys/statement-file?hash=eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..wdLYaMKloKvx-9dv.8FM-Htd0FkJvsEwGR0h5PDhDrNmO-KTjaflmWZSO0xHiuvGMH9mqGdrAxR11FvoKEbzPxkW5M_Hcvc1kbaj6NEB1Hu0G-YBi.vKjPNBrUMkBWcAMxmvcd0w)<img width="1024" height="1365" alt="image" src="https://github.com/user-attachments/assets/4e1742b8-3b27-47e0-a581-1a2a8c32b18d" />
+<img width="512" height="632" alt="image" src="https://github.com/user-attachments/assets/deecbc69-3e0e-4a3a-a330-87097fb91427" />
+
+
 ```
 A. AB = CD B. ∠AEB = 30° C. AB = 4 cm D. BC = 4 cm E. BE ⊥ BC
 
@@ -14,7 +16,8 @@ A. AB = CD B. ∠AEB = 30° C. AB = 4 cm D. BC = 4 cm E. BE ⊥ BC
 ```
 
 **Формат ввода**
-Вам даётся файл input.pickle. Он содержит список со словарями, в которых содержатся картинки и варианты ответов:
+
+Поаётся файл input.pickle. Он содержит список со словарями, в которых содержатся картинки и варианты ответов:
 ```
 [
     {
@@ -31,7 +34,7 @@ A. AB = CD B. ∠AEB = 30° C. AB = 4 cm D. BC = 4 cm E. BE ⊥ BC
 ```
 
 **Формат вывода**
-Ваш solution.py должен записать output.json со списком словарей с ответами, например:
+solution.py должен записывает output.json со списком словарей с ответами, например:
 
 ```
 [{"rid": 1, "answer": "BC"}, {"rid": 2, "answer": "D"}]
