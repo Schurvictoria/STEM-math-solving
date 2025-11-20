@@ -6,6 +6,36 @@
 
 Проект предназначен для анализа геометрических и физических задач, представленных в виде изображения и текстового вопроса. Система определяет правильность утверждений на основе анализа визуальной информации и текста.
 
+[https://assets.contest.yandex.net/testsys/statement-file?hash=eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..wdLYaMKloKvx-9dv.8FM-Htd0FkJvsEwGR0h5PDhDrNmO-KTjaflmWZSO0xHiuvGMH9mqGdrAxR11FvoKEbzPxkW5M_Hcvc1kbaj6NEB1Hu0G-YBi.vKjPNBrUMkBWcAMxmvcd0w<img width="1024" height="1365" alt="image" src="https://github.com/user-attachments/assets/4308fe25-13a8-4ec0-aeb8-652d41b79bc6" />](https://assets.contest.yandex.net/testsys/statement-file?hash=eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..wdLYaMKloKvx-9dv.8FM-Htd0FkJvsEwGR0h5PDhDrNmO-KTjaflmWZSO0xHiuvGMH9mqGdrAxR11FvoKEbzPxkW5M_Hcvc1kbaj6NEB1Hu0G-YBi.vKjPNBrUMkBWcAMxmvcd0w)<img width="1024" height="1365" alt="image" src="https://github.com/user-attachments/assets/4e1742b8-3b27-47e0-a581-1a2a8c32b18d" />
+```
+A. AB = CD B. ∠AEB = 30° C. AB = 4 cm D. BC = 4 cm E. BE ⊥ BC
+
+Ответ: "AC"
+```
+
+**Формат ввода**
+Вам даётся файл input.pickle. Он содержит список со словарями, в которых содержатся картинки и варианты ответов:
+```
+[
+    {
+        "rid" : 1,
+        "question" : "A. Angle α is 86°\nB. The angle adjacent to angle α is 56°\nC. α = 48°\nD. The sum of angles 86° and 38° is equal to angle α\nE. All the rays depicted lie on two intersecting lines",
+        "image" : <blob>,
+    },
+    {
+        "rid" : 2,
+        "question" : "What can be said about the liquid levels h₁ and h₂ shown in the figure?\nA. h₁ > h₂\nB. h₂ > h₁\nC. h₁ = h₂\nD. This cannot be determined from the figure.",
+        "image" : <blob>,
+    }
+]
+```
+
+**Формат вывода**
+Ваш solution.py должен записать output.json со списком словарей с ответами, например:
+
+```
+[{"rid": 1, "answer": "BC"}, {"rid": 2, "answer": "D"}]
+```
 ## Tech Stack
 
 **Computer Vision & Deep Learning:**
