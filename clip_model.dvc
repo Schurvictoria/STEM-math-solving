@@ -1,0 +1,6 @@
+outs:
+- md5: 333f0fbcf20cb950b961172c07dc6bb2.dir
+  size: 610188754
+  nfiles: 8
+  hash: md5
+  path: clip_model
