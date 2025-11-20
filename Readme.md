@@ -1,50 +1,168 @@
-# Visual Language Models (VLM)
+# STEM Math Solving with Vision-Language Models
 
+Решение для задачи автоматического решения математических и физических задач с изображениями, используя мультимодальные модели машинного обучения
 
-## Getting started
+## Описание проекта
 
-1. Generate ssh key using`ssh-keygen`
+Проект предназначен для анализа геометрических и физических задач, представленных в виде изображения и текстового вопроса. Система определяет правильность утверждений на основе анализа визуальной информации и текста.
 
-2. Setup ssh key for your account
-https://ml-contest.gitlab.yandexcloud.net/-/user_settings/ssh_keys
+## Tech Stack
 
-Use .pub file that you generated on previous step
+**Computer Vision & Deep Learning:**
+- PyTorch (нейронные сети, обучение моделей)
+- Transformers (Hugging Face): Qwen2-VL-7B-Instruct, InternVL2-8B
+- OpenCV (обработка и анализ изображений)
+- Pillow (работа с изображениями)
+- 4-bit квантизация моделей (BitsAndBytes)
 
-3. `ssh-add <private key>`
-private key is typically `~/.ssh/id_rsa`
+**Machine Learning:**
+- LightGBM / XGBoost (градиентный бустинг для мета-модели)
+- scikit-learn (классификация, метрики)
+- NumPy (векторные вычисления)
 
+**NLP:**
+- Natural Language Inference модели
+- Few-shot learning с промптами
+- Self-consistency для повышения надежности
 
-4. `git clone git@ml-contest.gitlab.yandexcloud.net:problems/<your repo path>.git`
+## Архитектура
 
-5. Write your soultion.
-The example solution could be seen in files solution.py. The environment that it will use is provided in Dockerfile. You can customize Dockerfile to your needs. If you need other packages, just add them there.
-We will run `docker build` inside your repository, so all the files will be available by the same relative paths.
+**Многоуровневый ансамбль экспертных моделей:**
 
-6. After you completed your solution, you can submit it using one of the two options.
+### 1. Vision-Language Models (vlm.py)
+- Qwen2-VL-7B-Instruct, InternVL2-8B
+- 4-bit квантизация для работы на ограниченных ресурсах
+- Self-consistency: множественная генерация с агрегацией
+- Few-shot промптинг с примерами задач
+- Анализ энтропии и консистентности предсказаний
 
-## Submitting your solution using Git LFS (slow)
-```bash
-git lfs install
-git lfs track ./big_model_weights/**
-git add .
-git commit -m "Solution"
-git push
+### 2. OCR + Rule-based система (ocr_rules.py)
+- Извлечение текста и численных данных с изображений
+- Feature engineering: признаки изображения (размеры, aspect ratio, цвета)
+- Feature engineering: признаки вопроса (тип задачи, ключевые слова)
+- Специализированные эвристики для разных типов задач
+
+### 3. Natural Language Inference (nli.py)
+- Логический анализ текстовых утверждений
+- Детекция противоречий и следствий
+- Вероятностная оценка (entailment/contradiction/neutral)
+
+### 4. Мета-модель (meta.py)
+- LightGBM/XGBoost для финального решения
+- Взвешенное голосование с учетом уверенности экспертов
+- Разрешение конфликтов между моделями
+- Калибровка вероятностей и оптимизация порогов
+
+## Структура проекта
+
 ```
-Then click use the button to submit your task in contest.yandex.ru
-Remember, that there is a limit of to submissions per day
-
-## Submitting your solution using DVC (fast, experimental)
-This method uses dvc instead of LFS https://dvc.org/
-
-1. Run ./init_dvc.sh. This will allow you to properly initiate dvc (data version control) that we will use to store large files (like model weigths)
-2. To submit your solution use following commands:
-```bash
-dvc add <model checkpoint path> # important: checkpoint should be in the same directory as other project files
-dvc push  # upload model weights to S3
-git add . # commit the rest of files
-git commit -m "Solution"
-git push
+1114-solution/
+├── solution.py          # Основное решение с эвристиками
+├── vlm.py              # VLM модели (Qwen2-VL, InternVL2)
+├── ocr_rules.py        # OCR + правила для геометрии
+├── nli.py              # Natural Language Inference
+├── meta.py             # Мета-модель для объединения результатов
+├── synthetic_data.py   # Генерация синтетических данных
+├── benchmark_local.py  # Локальное тестирование
+├── quick_test.py       # Быстрые тесты
+├── requirements.txt    # Зависимости
+└── Dockerfile         # Docker-образ для запуска
 ```
-Then click use the button to submit your task in contest.yandex.ru
-Remember, that there is a limit of to submissions per day
 
+## Установка и запуск
+
+### Требования
+- Python 3.8+
+- CUDA-совместимый GPU (опционально, для VLM моделей)
+- 8+ GB RAM
+
+### Установка зависимостей
+
+```bash
+pip install -r requirements.txt
+```
+
+### Быстрый старт
+
+```bash
+# Установка зависимостей
+pip install -r requirements.txt
+
+# Запуск решения
+python solution.py
+
+# Тестирование
+python benchmark_local.py
+```
+
+Входные данные: `input.pickle` (список объектов с полями `rid`, `question`, `image`)
+Выходные данные: `output.json` (предсказания в формате `{"rid": "...", "answer": "A"/"BC"/...}`)
+
+## Ключевые технические решения
+
+### Computer Vision
+- **Мультимодальный анализ**: обработка изображений через Vision-Language Models
+- **Feature extraction**: извлечение признаков изображения (размеры, цвета, aspect ratio)
+- **OCR**: распознавание текста и чисел на схемах
+- **Image preprocessing**: нормализация и адаптация под разные модели
+
+### Machine Learning Pipeline
+```
+Изображение + Вопрос
+        ↓
+┌───────┴────────┬────────────┬──────────┐
+│   VLM          │    OCR     │   NLI    │
+│ (GPU/4-bit)    │  +Rules    │  Model   │
+└───────┬────────┴────────────┴──────────┘
+        ↓
+    Мета-модель (LightGBM)
+        ↓
+   Финальный ответ
+```
+
+### Оптимизации
+- **4-bit квантизация**: уменьшение memory footprint моделей в 4 раза
+- **Self-consistency**: генерация нескольких ответов с агрегацией для повышения надежности
+- **Ensemble learning**: комбинация предсказаний разных архитектур
+- **Адаптивные пороги**: динамическая калибровка уверенности для разных типов задач
+
+## Feature Engineering
+
+**Признаки изображения:**
+- Размеры (width, height, area)
+- Aspect ratio
+- Цветовые характеристики (mean, variance)
+- Морфологические признаки
+
+**Признаки текста:**
+- Длина и количество слов
+- Наличие чисел и специальных символов
+- Ключевые слова (angle, circle, perpendicular, triangle)
+- Автоматическое определение типа задачи
+
+**Мета-признаки:**
+- Энтропия предсказаний
+- Согласованность между экспертами
+- Уверенность моделей
+- Детекция конфликтов
+
+## Метрики
+
+- Accuracy (точность классификации)
+- Entropy (неопределенность предсказаний)
+- Consistency (согласованность между прогонами)
+- Agreement score (согласованность экспертов)
+- Calibration (калибровка вероятностей)
+
+## Зависимости
+
+```
+torch>=1.9.0
+transformers>=4.20.0
+Pillow>=8.0.0
+numpy>=1.21.0
+scikit-learn>=1.0.0
+opencv-python>=4.5.0
+lightgbm (optional)
+xgboost (optional)
+```
